@@ -4,7 +4,7 @@ Modified the original model [girliemac/RPi-KittyCam](https://github.com/girliema
 
 1. Used the SmartiPi case ([LEGO compatible SmartiPi Raspberry Pi B+,2, and 3 w/ camera case and GoPro compatible mount – Gray](http://a.co/c6ul3AQ)) and assembled with Pi and Camera board module.
 
-1. Followed instructions found for [Lego PIR Housing](http://www.instructables.com/id/Lego-PIR-Housing/) (instructables member [tocsik](http://www.instructables.com/member/tocsik/) to build the PIR housing and mount to SmartiPi case.
+1. Followed instructions found for [Lego PIR Housing](http://www.instructables.com/id/Lego-PIR-Housing/) (instructables member [tocsik](http://www.instructables.com/member/tocsik/)) to build the PIR housing and mount to SmartiPi case.
 
 1. Used GoPro grab bag of mounts to mount the chassis to the wall: [GoPro Grab Bag](http://a.co/j6OIIT2)
 
