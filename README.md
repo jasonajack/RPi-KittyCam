@@ -1,3 +1,19 @@
+# SmartPi Case
+
+Modified the original model [girliemac/RPi-KittyCam](https://github.com/girliemac/RPi-KittyCam) as follows:
+
+1. Used the SmartiPi case ([LEGO compatible SmartiPi Raspberry Pi B+,2, and 3 w/ camera case and GoPro compatible mount – Gray](http://a.co/c6ul3AQ)) and assembled with Pi and Camera board module.
+
+1. Followed instructions found for [Lego PIR Housing](http://www.instructables.com/id/Lego-PIR-Housing/) (instructables member [tocsik](http://www.instructables.com/member/tocsik/) to build the PIR housing and mount to SmartiPi case.
+
+1. Used GoPro grab bag of mounts to mount the chassis to the wall: [GoPro Grab Bag](http://a.co/j6OIIT2)
+
+---
+
+_Sections below are preserved from the original content._
+
+---
+
 # Raspberry Pi KittyCam
 
 **Updated: Tutorial is now available on my blog, [KittyCam - Building a Raspberry Pi Camera with Cat Face Detection in Node.js](http://www.girliemac.com/blog/2015/12/25/kittycam-raspberrypi-camera-cat-face-recog-nodejs/), also 
@@ -17,7 +33,6 @@
 Raspberry Pi app using a camera and PIR motion sensor, written in Node.js using Johnny-Five and KittyDar for  with cat facial detection.
 
 **I will write up the step-by-step tutorial (hopefully) soon!** But until then, here is the instruction how to run this code locally with your own Raspberry Pi.
-
 
 ## Building the Circuit
 
@@ -41,9 +56,6 @@ If you are a Raspberry Pi newbie, I recommend to buy this [CanaKit Raspberry Pi 
 - 1 whatever color wire: PIR-OUT to Pi's Pin 7 (GPIO 4)
 
 ![RPi PIR](https://lh3.googleusercontent.com/vInXgXGKPueI2J4zq88BgUJOkcXgJCvReVT4kA2K1A16=w1424-h801-no "Rapsberry Pi 2, camera, and PIR wired")
-
-
-
 
 ## Software Setup
 
