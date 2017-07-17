@@ -1,6 +1,6 @@
 [Unit]
 Description=Disables transparent hugepages before MongoDB starts
-Before=mongod.target
+Before=mongod.service
 
 [Service]
 User=root
