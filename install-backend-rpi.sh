@@ -26,3 +26,12 @@ pushd rpi
 yes | npm update
 popd
 
+# Copy this directory to the correct location to run as a service
+sudo rm -rf /usr/lib/KittyCam
+sudo mkdir -p /usr/lib/KittyCam /usr/lib/systemd/system
+sudo cp -av .git .gitignore * /usr/lib/KittyCam
+sudo cp -av rpi/kittycam.service /usr/lib/systemd/system
+sudo systemctl daemon-reload
+sudo systemctl start kittycam
+sudo systemctl enable kittycam
+

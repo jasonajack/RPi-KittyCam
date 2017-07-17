@@ -1,0 +1,9 @@
+[Unit]
+Description=Runs the Kitty Cam NodeJS service
+After=network.target
+
+[Service]
+ExecStart=/usr/lib/KittyCam/run-backend-rpi.sh
+
+[Install]
+WantedBy=multi-user.target
