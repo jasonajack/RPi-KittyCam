@@ -75,7 +75,7 @@ Follow the steps below to install another server (i.e. desktop server) with Mong
 1. Run the installer script:
 
     ```bash
-    ./install-backend-centos.sh
+    ./install-backend-mongodb.sh
     ```
 
 _NOTE: I used a CentOS 7 distrobution for this, but if you are using a Debian-based distribution like Mint or Ubuntu then you might have to change the Yum calls to Apt._
@@ -87,7 +87,7 @@ If you are using the same CentOS server as the one running MongoDB then there is
 On the server you want to run the NodeJS/ReactJS frontend, run the installer script:
 
 ```bash
-./install-frontend-centos.sh
+./install-frontend-nodejs.sh
 ```
 
 ---

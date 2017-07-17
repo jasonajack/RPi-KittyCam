@@ -1,0 +1,13 @@
+[Unit]
+Description=Disables transparent hugepages before MongoDB starts
+Before=mongod.target
+
+[Service]
+User=root
+ExecStartPre=/bin/echo 0 > /sys/kernel/mm/transparent_hugepage/khugepaged/defrag
+ExecStartPre=/bin/echo never > /sys/kernel/mm/transparent_hugepage/enabled
+ExecStartPre=/bin/echo never > /sys/kernel/mm/transparent_hugepage/defrag
+ExecStart=/bin/cat /sys/kernel/mm/transparent_hugepage/enabled /sys/kernel/mm/transparent_hugepage/defrag
+
+[Install]
+WantedBy=multi-user.target
