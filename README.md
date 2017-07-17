@@ -1,6 +1,6 @@
 # WORK IN PROGRESS
 
-<img src="http://wiki.tesnexus.com/images/7/7c/Work_in_Progress_Header.png" width=800/>
+![Work-In-Progress](WIP.png)
 
 Everything below is still a work in progress.
 
