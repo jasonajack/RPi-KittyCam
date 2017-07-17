@@ -8,7 +8,7 @@ sudo apt-get autoremove -y
 
 # Install Node.js and NPM
 sudo apt-get install -y nodejs npm
-sudo ln -s /usr/bin/nodejs /usr/bin/node
+sudo ln -s /usr/bin/nodejs /usr/bin/node &> /dev/null || true
 
 # Verify install
 nodejs -v
