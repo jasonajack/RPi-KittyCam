@@ -13,6 +13,7 @@ sudo sed -ri /bindIp/d /etc/mongod.conf
 
 # Copy in disable-transparent-hugepages service (optimizes MongoDB)
 sudo cp -av mongodb/disable-transparent-hugepages.service /usr/lib/systemd/system
+sudo cp -av mongodb/disable-transparent-hugepages.sh /usr/bin
 sudo systemctl daemon-reload
 sudo systemctl restart disable-transparent-hugepages
 sudo systemctl enable disable-transparent-hugepages
