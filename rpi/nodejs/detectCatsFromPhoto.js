@@ -4,6 +4,7 @@
 
 'use strict'
 
+// Pull in kittydar dependency
 const fs = require('fs');
 const kittydar = require('kittydar');
 const Canvas = require('kittydar/node_modules/canvas');

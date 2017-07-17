@@ -1,0 +1,3 @@
+[submodule "kittydar"]
+	path = kittydar
+	url = git@github.com:jasonajack/kittydar.git

@@ -1,3 +1,9 @@
+# WORK IN PROGRESS
+
+<img src="http://wiki.tesnexus.com/images/7/7c/Work_in_Progress_Header.png" width=800/>
+
+Everything below is still a work in progress.
+
 # SmartPi Case
 
 Modified the original model [girliemac/RPi-KittyCam](https://github.com/girliemac/RPi-KittyCam) as follows:
@@ -7,6 +13,82 @@ Modified the original model [girliemac/RPi-KittyCam](https://github.com/girliema
 1. Followed instructions found for [Lego PIR Housing](http://www.instructables.com/id/Lego-PIR-Housing/) (instructables member [tocsik](http://www.instructables.com/member/tocsik/)) to build the PIR housing and mount to SmartiPi case.
 
 1. Used GoPro grab bag of mounts to mount the chassis to the wall: [GoPro Grab Bag](http://a.co/j6OIIT2)
+
+# Rearchitected Model
+
+The system architecture was changed in the following ways from the original design to store the image data into a MongoDB service, and now includes a frontend web service to view the data.  You can scroll back through history to review image captures in the past, or monitor current image captures in a live feed.
+
+Some highlights include:
+
+1. Reconfigured to use [Ubuntu on Raspberry Pi](https://ubuntu-mate.org/raspberry-pi/).
+
+1. Images are uploaded to a private MongoDB service based on a configuration file.
+
+1. The system model consists of the Raspberry Pi backend service, the MongoDB service on another server, and the NodeJS/ReactJS frontend web service.
+
+1. The images are stored in MongoDB with timestamps and metadata, and can be configured to store image data regardless of whether or not a cat is present in the image.
+
+The benefit to storing in a MongoDB service is that the image data can be processed as video, and viewed after the original capture.  Furthermore, no online services are needed to upload the image data for later viewing.  However, you will need to setup a MongoDB service on another server.
+
+I recommend installing the frontend service on the same server that is running the MongoDB server to optimize performance.
+
+# Install Raspberry Pi Backend Service
+
+The backend service that runs the image captures and sends the data off to the MongoDB server runs on the Raspberry Pi.  It is forked from the [girliemac/RPi-KittyCam](https://github.com/girliemac/RPi-KittyCam) project and uses the [harthur-org/kittydar](https://github.com/harthur-org/kittydar) project to run kitty facial recognition.
+
+Follow the steps below to install the backend service to a fresh Raspberry Pi:
+
+1. Install [Ubuntu on Raspberry Pi](https://ubuntu-mate.org/raspberry-pi/) using the process described in the guide.  
+
+1. Next, install Git as follows:
+
+    ```bash
+    sudo apt-get update -y
+    sudo apt-get upgrade -y
+    sudo apt-get autoremove -y
+    sudo apt-get install -y git
+    ```
+
+1. Then clone this repository recursively (e.g. `git clone git@github.com:jasonajack/RPi-KittyCam.git --recursive`).
+
+1. Install the backend service to the Raspberry Pi, run the installer script:
+
+    ```bash
+    ./install-backend-rpi.sh
+    ```
+
+# Install MongoDB Service
+
+Follow the steps below to install another server (i.e. desktop server) with MongoDB:
+
+1. Install CentOS 7 on a desktop server or in a Virtual Machine: [CentOS Homepage](https://www.centos.org/)
+
+1. Install Git so you can clone the repository:
+
+    ```bash
+    sudo yum update -y
+    sudo yum install -y git
+    ```
+
+1. Then clone this repository recursively (e.g. `git clone git@github.com:jasonajack/RPi-KittyCam.git --recursive`).
+
+1. Run the installer script:
+
+    ```bash
+    ./install-backend-centos.sh
+    ```
+
+_NOTE: I used a CentOS 7 distrobution for this, but if you are using a Debian-based distribution like Mint or Ubuntu then you might have to change the Yum calls to Apt._
+
+# Install Frontend Service
+
+If you are using the same CentOS server as the one running MongoDB then there is no need to setup the operating system again.  Otherwise, install a new server elsewhere or build a new Virtual Machine.
+
+On the server you want to run the NodeJS/ReactJS frontend, run the installer script:
+
+```bash
+./install-frontend-centos.sh
+```
 
 ---
 

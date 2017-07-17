@@ -7,11 +7,13 @@
 
 'use strict'
 
-const config = require('./config');
+// Pull in core modules
 const fs = require('fs');
 const child_process = require('child_process');
-
 require('events').EventEmitter.prototype._maxListeners = 20;
+
+// Read in configuration file
+const config = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 
 // Johnny-Five for RPi
 const raspi = require('raspi-io');
@@ -85,72 +87,8 @@ function deletePhoto(imgPath) {
   });
 }
 
-
-// PubNub to publish the data
-// to make a separated web/mobile interface can subscribe the data to stream the photos in realtime.
-
-const channel = 'kittyCam';
-
-const pubnub = require('pubnub').init({
-  subscribe_key: config.pubnub.subscribe_key,
-  publish_key: config.pubnub.publish_key
-});
-
-function publish(url, timestamp) {
-  pubnub.publish({
-    channel: channel,
-    message: {image: url, timestamp: timestamp},
-    callback: (m) => {console.log(m);},
-    error: (err) => {console.log(err);}
-  });
-}
-
-// Nexmo to send SMS
-
-const Nexmo = require('nexmo');
-
-const nexmo = new Nexmo({
-  apiKey: config.nexmo.api_key,
-  apiSecret: config.nexmo.api_secret
-});
-
-function sendSMS(url, timestamp) {
-  var t = new Date(timestamp).toLocaleString();
-  let msg = '🐈 detected on '+ t + '! See the photo at: ' + url;
-  nexmo.message.sendSms(
-    config.nexmo.fromNumber,
-    config.nexmo.toNumber,
-    msg,
-    {type: 'unicode'},
-    (err, responseData) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.dir(responseData);
-      }
-    }
-  );
-}
-
-// Cloudinary to store the photos
-
-const cloudinary = require('cloudinary');
-
-cloudinary.config({
-  cloud_name: config.cloudinary.cloud_name,
-  api_key: config.cloudinary.api_key,
-  api_secret: config.cloudinary.api_secret
-});
-
-function uploadToCloudinary(base64Img, timestamp) {
-  cloudinary.uploader.upload(base64Img, (result) => {
-    console.log(result);
-    publish(result.url, timestamp); // Comment this out if you don't use PubNub
-    sendSMS(result.url, timestamp); // Comment this out if you don't use Nexmo
-  });
-}
-
 // Ctrl-C
 process.on('SIGINT', () => {
   process.exit();
 });
+
