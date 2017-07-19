@@ -22,11 +22,11 @@ const five = require('johnny-five');
 const board = new five.Board({repl: false, io: new raspi()});
 
 // Image update timer
-const fps = 20; // frames per second
-const timer = 1000 / 20;
+const fps = config.fps; // frames per second
+const timer = 1000 / fps;
 
 // Maximum number of facial detections in parallel
-var maxdetects = 10;
+var maxdetects = config.maxdetects;
 
 // Flag to engage image copy
 var inMotion = false;
@@ -100,7 +100,7 @@ setInterval(() => {
       if (maxdetects > 0) {
         detectCatsFromImage(image, (newimage) => {
           console.log(`Detected at cat at timestamp ${timestamp}, updating database.`);
-          mongoCollection.updateOne({'timestamp': timestamp}, {'image': newimage}, (err, result) => {
+          mongoCollection.updateOne({'timestamp': timestamp}, {'cats-detected': true, 'image': newimage}, (err, result) => {
             if (err) { console.log(`Error when updating database: ${err}`); }
           });
         });
@@ -109,7 +109,7 @@ setInterval(() => {
       }
 
       // Insert image into MongoDB
-      mongoCollection.insert({'timestamp': timestamp, 'image': image}, (err, result) => {
+      mongoCollection.insert({'timestamp': timestamp, 'cats-detected': false, 'image': image}, (err, result) => {
         if (err) {
           console.log(`Encountered error when writing to MongoDB: ${err}`);
         } else {
