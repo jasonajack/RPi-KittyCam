@@ -28,6 +28,10 @@ Some highlights include:
 
 1. The images are stored in MongoDB with timestamps and metadata, and can be configured to store image data regardless of whether or not a cat is present in the image.
 
+1. Rearchitected `kittyCam.js` to not call `raspistill` directly.  Instead, `raspistill` is run as a background service that updates `/tmp/kittycam.jpg` at regular intervals.  The `kittyCam.js` process will read those images when motion is detected, which avoids having to spawn off the process from within NodeJS.  This was done to be a faster frames per second read of the camera device, but also because the camera takes a while after `raspistill` starts to focus and auto-adjust the brightness and contract.  This yields better resolution images.
+
+1. Added a configuration file `rpi/systemd.conf` which gets read into the background services when they are run.  These values can be tweaked to change the resolution of the images, how fast they are taken, any rotation operation done to them prior to processing, and so on.
+
 The benefit to storing in a MongoDB service is that the image data can be processed as video, and viewed after the original capture.  Furthermore, no online services are needed to upload the image data for later viewing.  However, you will need to setup a MongoDB service on another server.
 
 I recommend installing the frontend service on the same server that is running the MongoDB server to optimize performance.
