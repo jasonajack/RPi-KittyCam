@@ -56,6 +56,14 @@ Follow the steps below to install the backend service to a fresh Raspberry Pi:
     ```bash
     ./install-backend-rpi.sh
     ```
+    
+    _NOTE: This will build and install all dependencies, and install `systemd` services to run the KittyCam at boot._
+
+1. Change run-level to not boot the graphical user interface (saves resources):
+
+    ```bash
+    sudo systemctl set-default multi-user.target
+    ```
 
 # Install MongoDB Service
 
