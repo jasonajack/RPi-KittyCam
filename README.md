@@ -80,13 +80,15 @@ Follow the steps below to install another server (i.e. desktop server) with Mong
 
 1. Then clone this repository recursively (e.g. `git clone git@github.com:jasonajack/RPi-KittyCam.git --recursive`).
 
-1. Run the installer script:
+1. Run the installer script, which installs and configures MongoDB optimally, and installs a background process which deletes old data that's over 7 days old.
 
     ```bash
     ./install-backend-mongodb.sh
     ```
 
 _NOTE: I used a CentOS 7 distrobution for this, but if you are using a Debian-based distribution like Mint or Ubuntu then you might have to change the Yum calls to Apt._
+
+If you want to change the retention time of the image data, modify `mongodb/kittycam-cleanup.sh` and adjust the `TOO_OLD` value to your liking, and then rerun the installer script.
 
 # Install Frontend Service
 
