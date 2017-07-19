@@ -1,0 +1,9 @@
+[Unit]
+Description=Cleanup service for KittyCam MongoDB documents
+After=mongod.service
+
+[Service]
+ExecStart=/usr/bin/kittycam-cleanup.sh
+
+[Install]
+WantedBy=multi-user.target
