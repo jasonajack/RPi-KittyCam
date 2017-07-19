@@ -1,0 +1,3 @@
+{
+  "mongourl": "mongodb://database:27017/kittycam"
+}

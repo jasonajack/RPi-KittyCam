@@ -4,4 +4,6 @@ config.js
 node_modules
 *.swp
 *.log
-
+*.jpg
+*~
+*.pid

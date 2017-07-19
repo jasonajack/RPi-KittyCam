@@ -1,3 +1,4 @@
 [submodule "kittydar"]
-	path = kittydar
-	url = git@github.com:jasonajack/kittydar.git
+  path = rpi/kittydar
+  url = git@github.com:jasonajack/kittydar.git
+  branch = master

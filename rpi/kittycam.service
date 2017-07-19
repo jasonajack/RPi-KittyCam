@@ -1,9 +1,14 @@
 [Unit]
 Description=Runs the Kitty Cam NodeJS service
 After=network.target
+Requires=raspistill.service
 
 [Service]
-ExecStart=/usr/lib/KittyCam/run-backend-rpi.sh
+EnvironmentFile=/usr/local/KittyCam/rpi/systemd.conf
+WorkingDirectory=/usr/local/KittyCam/rpi
+ExecStart=/usr/bin/node kittyCam.js ${CONFIG} ${IMAGE}
+Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
