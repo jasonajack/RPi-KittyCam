@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -x
 cd $(dirname ${0})
 
 # Update everything first
