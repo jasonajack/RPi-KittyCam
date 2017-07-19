@@ -38,3 +38,6 @@ sudo systemctl daemon-reload
 sudo systemctl start kittycam
 sudo systemctl enable kittycam
 
+# Fix issue with not booting when no HDMI cable plugged in
+sudo sed -ri s/#?hdmi_force_hotplug=.*/hdmi_force_hotplug=1/g /boot/config.txt
+
