@@ -26,9 +26,6 @@ sudo systemctl restart mongod
 sudo systemctl enable mongod
 sudo systemctl status mongod || true
 
-# Add indexes
-/usr/bin/mongo localhost:27017/kittycam -eval 'db.images.createIndex({timestamp: 1})'
-
 # Start the cleanup service
 sudo systemctl restart kittycam-cleanup
 sudo systemctl enable kittycam-cleanup
