@@ -28,7 +28,7 @@ Some highlights include:
 
 1. The images are stored in MongoDB with timestamps and metadata, and stores image data regardless of whether or not a cat is present in the image (unprocessed images are processed later by the post-processing service).
 
-1. Rearchitected `kittyCam.js` to not call `raspistill` directly.  Instead, `raspistill` is run as a background service that updates `/tmp/kittycam.jpg` at regular intervals.  The `kittyCam.js` process will read those images when motion is detected, which avoids having to spawn off the process from within NodeJS.  This was done to be a faster frames per second read of the camera device, but also because the camera takes a while after `raspistill` starts to focus and auto-adjust the brightness and contract.  This yields better resolution images.
+1. Rearchitected `kittyCam.js` to not call `raspistill` directly.  Instead, `raspivid` is run as a background service that updates `/tmp/kittycam.jpg` at regular intervals.  The `kittyCam.js` process will read those images when motion is detected, which avoids having to spawn off the process from within NodeJS.  This was done to be a faster frames per second read of the camera device, but also because the camera takes a while after `raspistill` starts to focus and auto-adjust the brightness and contract.  This yields better resolution images at a 30 frames per second recording rate.
 
 1. Added a configuration file `kittycam/systemd.conf` which gets read into the background services when they are run.  These values can be tweaked to change the resolution of the images, how fast they are taken, any rotation operation done to them prior to processing, and so on.
 
