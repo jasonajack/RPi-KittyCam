@@ -84,7 +84,7 @@ function readImage(callback) {
       callback(data);
 
       // Delete the image so we don't re-upload it
-      deleteImage();
+      //deleteImage();
     }
   });
 }

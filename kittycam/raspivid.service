@@ -4,7 +4,7 @@ BindTo=kittycam.service
 
 [Service]
 EnvironmentFile=/usr/local/KittyCam/kittycam/systemd.conf
-ExecStart=/usr/bin/raspistill -w ${WIDTH} -h ${HEIGHT} -q ${QUALITY} -o ${IMAGE} -tl ${PERIOD_MS} -t 0 -th 0:0:0 -rot ${ROTATION} -n
+ExecStart=/usr/local/KittyCam/kittycam/raspivid.sh
 
 [Install]
 WantedBy=multi-user.target

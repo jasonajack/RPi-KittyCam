@@ -1,8 +1,8 @@
 #!/bin/bash -x
 
 # The time in seconds for data to expire and sleep timer
-TOO_OLD=604800
-SLEEP=3600
+TOO_OLD=108000
+SLEEP=600
 
 # Loop forever
 while [ 1 ]; do

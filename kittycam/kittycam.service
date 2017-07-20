@@ -1,7 +1,7 @@
 [Unit]
 Description=Runs the Kitty Cam NodeJS service
 After=network.target
-Requires=raspistill.service
+Requires=raspivid.service
 
 [Service]
 EnvironmentFile=/usr/local/KittyCam/kittycam/systemd.conf
