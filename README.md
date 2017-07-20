@@ -22,17 +22,19 @@ Some highlights include:
 
 1. Reconfigured to use [Ubuntu on Raspberry Pi](https://ubuntu-mate.org/raspberry-pi/).
 
-1. Images are uploaded to a private MongoDB service based on a configuration file.
+1. Images are uploaded to a private MongoDB service running on another server, the URL is stored in a configuration file.
 
-1. The system model consists of the Raspberry Pi backend service, the MongoDB service on another server, and the NodeJS/ReactJS frontend web service.
+1. The system model consists of the Raspberry Pi backend service, the MongoDB service on another server, a MongoDB/KittyDar image post-processing service, and the NodeJS/ReactJS frontend web service.
 
-1. The images are stored in MongoDB with timestamps and metadata, and can be configured to store image data regardless of whether or not a cat is present in the image.
+1. The images are stored in MongoDB with timestamps and metadata, and stores image data regardless of whether or not a cat is present in the image (unprocessed images are processed later by the post-processing service).
 
 1. Rearchitected `kittyCam.js` to not call `raspistill` directly.  Instead, `raspistill` is run as a background service that updates `/tmp/kittycam.jpg` at regular intervals.  The `kittyCam.js` process will read those images when motion is detected, which avoids having to spawn off the process from within NodeJS.  This was done to be a faster frames per second read of the camera device, but also because the camera takes a while after `raspistill` starts to focus and auto-adjust the brightness and contract.  This yields better resolution images.
 
 1. Added a configuration file `kittycam/systemd.conf` which gets read into the background services when they are run.  These values can be tweaked to change the resolution of the images, how fast they are taken, any rotation operation done to them prior to processing, and so on.
 
-The benefit to storing in a MongoDB service is that the image data can be processed as video, and viewed after the original capture.  Furthermore, no online services are needed to upload the image data for later viewing.  However, you will need to setup a MongoDB service on another server.
+1. Refactored system architecture to have the server backend run a "image post processing daemon".  This daemon will run continuously, finding images in MongoDB that haven't been processed through KittyDar yet.  Those it finds it forks off to KittyDar processes which will feed back updated image data.  When the forks close the daemon will update MongoDB indicating that it finished running the processor, and if there is image data it will feed the new image back to the database.  Testing indicates that it can process images much faster (using a Core i7-6850K system instead of RPi's ARM quad core) and can process up to 6 images per second (instead of one every 10 or so seconds) at a higher image size (increased size to 800x600 in testing).
+
+The benefit to storing in a MongoDB service is that the image data can be processed by a server outside of the RPi, which has been proven to be more efficient.  Furthermore, no online services are needed to upload the image data for later viewing.  However, you will need to setup the MongoDB and KittyDar image post-processing services on another server.
 
 I recommend installing the frontend service on the same server that is running the MongoDB server to optimize performance.
 
@@ -68,6 +70,62 @@ Follow the steps below to install the backend service to a fresh Raspberry Pi:
     ```bash
     sudo systemctl set-default multi-user.target
     ```
+
+1. Configure the WPA Supplicant service for your `wlan0` device to enable connecting to a WiFi network on boot:
+
+    _NOTE: If you don't use WPA Supplicant, Ubuntu forces you to use it's horrible NetworkManager service which forces you to login first before it connects to WiFi; so we swap out NetworkManager for WPA Supplicant which connects automatically at boot time._
+
+    1. Modify the network interfaces configuration file (`sudo vim /etc/network/interfaces`) and append the following to the file:
+
+        ```bash
+        # Setup wlan0
+        #auto wlan0
+        allow-hotplug wlan0
+        iface wlan0 inet dhcp
+        wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+        iface default inet dhcp
+        ```
+
+    1. Create the new `wpa_supplicant.conf` file (`sudo vim /etc/wpa_supplicant/wpa_supplicant.conf`):
+
+        ```bash
+        country=US
+        ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+        update_config=1
+
+        network={
+          ssid="WirelessRouterName"
+          psk="secretpassword"
+          key_mgmt=WPA-PSK
+        }
+        ```
+
+        _NOTE: The password is in plain text, which isn't usually good (and for some reason, password hashes didn't work for me), but you can protect the file so only `root` can read it, which should be good enough._
+
+    1. Protect your password by making the file read-only by `root` user exclusively:  `sudo chmod go-rw /etc/wpa_supplicant/wpa_supplicant.conf`
+
+    1. Enable the WPA supplicant service:
+
+        ```bash
+        sudo systemctl start wpa_supplicant
+        sudo systemctl enable wpa_supplicant
+        ```
+
+    1. Stop and disable the NetworkManager service, because it interferes with the WPA Supplicant service:
+
+        ```bash
+        sudo systemctl stop NetworkManager
+        sudo systemctl disable NetworkManager
+        ```
+
+    1. Test by rebooting and then checking `ip addr`:
+
+        ```bash
+        sudo reboot now
+
+        ### After reboot...
+        ip addr
+        ```
 
 # Install MongoDB Service
 
