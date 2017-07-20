@@ -4,8 +4,8 @@ After=network.target
 Requires=raspistill.service
 
 [Service]
-EnvironmentFile=/usr/local/KittyCam/rpi/systemd.conf
-WorkingDirectory=/usr/local/KittyCam/rpi
+EnvironmentFile=/usr/local/KittyCam/kittycam/systemd.conf
+WorkingDirectory=/usr/local/KittyCam/kittycam
 ExecStart=/usr/bin/node kittyCam.js ${CONFIG} ${IMAGE}
 Restart=always
 RestartSec=5

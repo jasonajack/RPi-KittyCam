@@ -2,5 +2,6 @@
   "mongourl": "mongodb://database:27017/kittycam",
   "fps": "10",
   "detectionEnabled": "false",
-  "maxdetects": "3"
+  "postProcessingSleepTimer": "10000",
+  "maxPostProcessingForks": "6"
 }
