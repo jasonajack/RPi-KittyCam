@@ -1,5 +1,6 @@
 {
   "mongourl": "mongodb://database:27017/kittycam",
-  "fps": "2",
-  "maxdetects": "8"
+  "fps": "10",
+  "detectionEnabled": "true",
+  "maxdetects": "3"
 }

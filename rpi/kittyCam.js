@@ -26,6 +26,7 @@ const fps = config.fps; // frames per second
 const timer = 1000 / fps;
 
 // Maximum number of facial detections in parallel
+const detectionEnabled = config.detectionEnabled == 'true';
 var maxdetects = config.maxdetects;
 
 // Flag to engage image copy
@@ -88,6 +89,35 @@ function readImage(callback) {
   });
 }
 
+// Function to run detection on the cat image and update MongoDB
+function runFacialDetection(timestamp, image) {
+  detectCatsFromImage(image, (newimage) => {
+    if (newimage) {
+      console.log(`Detected at cat at timestamp ${timestamp}, updating database.`);
+
+      // Update MongoDB
+      mongoCollection.updateOne(
+          {'timestamp': timestamp},
+          {'$set':
+            {
+              'kittydar-processed': true,
+              'cats-detected': true,
+              'image': newimage
+            }
+          }, (err, result) => {
+        if (err) { console.log(`Error when updating database: ${err}`); }
+      });
+    } else {
+      // Failed to find any cats, update MongoDB to reflect that we tried at least
+      mongoCollection.updateOne(
+          {'timestamp': timestamp},
+          {'$set': {'kittydar-processed': true}}, (err, result) => {
+        if (err) { console.log(`Error when updating database: ${err}`); }
+      });
+    }
+  });
+}
+
 // Setup interval that will copy off images taken by the raspistill running in background process
 setInterval(() => {
   // If PIR has detected motion
@@ -96,20 +126,23 @@ setInterval(() => {
       // Capture timestamp
       var timestamp = Date.now();
 
-      // Cat detection
-      if (maxdetects > 0) {
-        detectCatsFromImage(image, (newimage) => {
-          console.log(`Detected at cat at timestamp ${timestamp}, updating database.`);
-          mongoCollection.updateOne({'timestamp': timestamp}, {'cats-detected': true, 'image': newimage}, (err, result) => {
-            if (err) { console.log(`Error when updating database: ${err}`); }
-          });
-        });
-      } else {
-        console.log('Skipping facial detection, too many child processes.');
+      // Cat detection or skip
+      if (detectionEnabled) {
+        if (maxdetects > 0) {
+          runFacialDetection(timestamp, image);
+        } else {
+          console.log('Skipping facial detection, too many child processes.');
+        }
       }
 
       // Insert image into MongoDB
-      mongoCollection.insert({'timestamp': timestamp, 'cats-detected': false, 'image': image}, (err, result) => {
+      mongoCollection.insert(
+          {
+            'timestamp': timestamp,
+            'kittydar-processed': false,
+            'cats-detected': false,
+            'image': image
+          }, (err, result) => {
         if (err) {
           console.log(`Encountered error when writing to MongoDB: ${err}`);
         } else {
@@ -131,7 +164,7 @@ function detectCatsFromImage(image, callback) {
   // The child process is completed
   child.on('message', (newimage) => {
     maxdetects++;
-    if (newimage) { callback(newimage); }
+    callback(newimage);
   });
 }
 
