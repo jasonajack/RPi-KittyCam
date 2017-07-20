@@ -1,0 +1,23 @@
+{
+  "name": "mongodbKittydar",
+  "version": "0.1.0",
+  "description": "This is a daemon service that pulls images from MongoDB are parses them through KittyDar to run cat facial detection post image capture",
+  "main": "mongodbKittydar.js",
+  "dependencies": {
+    "mongodb": "^2.2.30"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasonajack/RPi-KittyCam.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jasonajack/RPi-KittyCam/issues"
+  },
+  "homepage": "https://github.com/jasonajack/RPi-KittyCam#readme"
+}

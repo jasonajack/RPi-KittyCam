@@ -1,0 +1,13 @@
+[Unit]
+Description=Runs the Kitty Cam Image Post-Processor, processing images from MongoDB through KittyDar
+After=network.target
+
+[Service]
+EnvironmentFile=/usr/local/KittyCam/kittycam/systemd.conf
+WorkingDirectory=/usr/local/KittyCam/kittycam/mongodbKittydar
+ExecStart=/usr/bin/node mongodbKittydar.js ${CONFIG}
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -x
 cd $(dirname ${0})
 
 # Copy in the MongoDB repo file
@@ -30,4 +30,17 @@ sudo systemctl status mongod || true
 sudo systemctl restart kittycam-cleanup
 sudo systemctl enable kittycam-cleanup
 sudo systemctl status kittycam-cleanup || true
+
+# Create indexes
+tryAndTryAgain() {
+  while [ 1 ]; do
+    # Run command and repeat until success
+    "${@}"
+    if [[ $? -eq 0 ]]; then return; fi
+    sleep 1s
+  done
+}
+tryAndTryAgain /usr/bin/mongo localhost:27017/kittycam -eval 'db.images.createIndex({"timestamp": 1})'
+tryAndTryAgain /usr/bin/mongo localhost:27017/kittycam -eval 'db.images.createIndex({"kittydar-processed": 1})'
+tryAndTryAgain /usr/bin/mongo localhost:27017/kittycam -eval 'db.images.createIndex({"cats-detected": 1})'
 

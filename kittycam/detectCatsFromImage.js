@@ -37,14 +37,17 @@ process.on('message', (image) => {
     // For each cat, draw a rectangle around it
     for (var i = 0; i < cats.length; i++) {
       var cat = cats[i];
+      console.log(`PID ${process.pid}: processing rectangle for cat ${i}: @ ${cat.x},${cat.y} dimensions ${cat.width}x${cat.height}`);
       ctx.strokeRect(cat.x, cat.y, cat.width, cat.height);
     }
 
     // Convert to base64 image; png by default. jpeg is currently not supported by node-canvas
+    console.log(`PID ${process.pid}: converting cat image to to a base64 image buffer.`);
     base64Img = canvas.toDataURL();
   }
   
   // Send back the image data
+  console.log(`PID ${process.pid}: done, sending back image to parent process.`);
   process.send(base64Img);
   
   // Clear the canvas and exit

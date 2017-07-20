@@ -1,4 +1,4 @@
 [submodule "kittydar"]
-  path = rpi/kittydar
+  path = kittycam/kittydar
   url = git@github.com:jasonajack/kittydar.git
   branch = master
