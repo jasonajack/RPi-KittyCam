@@ -1,5 +1,5 @@
 {
-  "mongourl": "mongodb://database:27017/kittycam",
+  "mongourl": "mongodb://kittycam-backend:27017/kittycam",
   "fps": "30",
   "detectionEnabled": "false",
   "postProcessingSleepTimer": "10000",
