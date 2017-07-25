@@ -127,6 +127,27 @@ Follow the steps below to install the backend service to a fresh Raspberry Pi:
         ip addr
         ```
 
+The `config/config.json` file controls various properties of the Raspberry Pi backend KittyCam service.  These are described below:
+
+* `fps`: The frames per second to grab from the video stream and store to MongoDB. This value is typically one half that of the `FPS` value in the `kittycam/systemd.conf` environment file.
+* `detectionEnabled`: Controls whether or not the RPi should fork images to KittyDar for post processing.  This is set to `false` by default since the post processor (described below) does this anyway.  Should you not want to use the post processor, you can set this to `true`.
+
+Furthermore, the services pull in environment variables to control various features of the image capture.  To set these, modify `kittycam/systemd.conf`:
+
+* `WIDTH`: The width of the images to capture.
+* `HEIGHT`: The height of the images to capture.
+* `ROTATION`: The number of degrees to rotate the image (depends on how you orient your camera).
+* `IMAGE`: Not worth setting; this controls where the temporary images are written before they are stored to MongoDB.
+* `CONFIG`: The location of the configuration file; usually not worth changing.
+* `FPS`: The frames per second that `raspivid` uses to write JPG files to the location specified by `IMAGE`.
+* `BITRATE`: The video bitrate to use in `raspivid`.
+
+If you set any of these values, restart your KittyCam service:
+
+```bash
+sudo systemctl restart kittycam
+```
+
 # Install MongoDB Service
 
 Follow the steps below to install another server (i.e. desktop server) with MongoDB:
@@ -142,15 +163,35 @@ Follow the steps below to install another server (i.e. desktop server) with Mong
 
 1. Then clone this repository recursively (e.g. `git clone git@github.com:jasonajack/RPi-KittyCam.git --recursive`).
 
+1. Edit the `mongodb/kittycam-cleanup.sh` script and adjust the `TOO_OLD` value to your liking, which configures how long to store image data in the database before it gets deleted. (_NOTE: Default is 30 hours._)
+
 1. Run the installer script, which installs and configures MongoDB optimally, and installs a background process which deletes old data that's over 7 days old.
 
     ```bash
     ./install-backend-mongodb.sh
     ```
 
-_NOTE: I used a CentOS 7 distrobution for this, but if you are using a Debian-based distribution like Mint or Ubuntu then you might have to change the Yum calls to Apt._
+    _NOTE: I used a CentOS 7 distrobution for this, but if you are using a Debian-based distribution like Mint or Ubuntu then you might have to change the Yum calls to Apt._
 
-If you want to change the retention time of the image data, modify `mongodb/kittycam-cleanup.sh` and adjust the `TOO_OLD` value to your liking, and then rerun the installer script.
+1. Run the installer script to run the installer for the MongoDB/KittyDar service.  This service will read unprocessed images from MongoDB and process them through the KittyDar service.  _WARNING: This typically maxes out your CPU on that box, depending on how many forks you allow it to create._
+
+    ```bash
+    ./install-backend-kittydar.sh
+    ```
+
+    _NOTE: I ran this on the same server as MongoDB, but you can run it on any server you prefer. Simply modify the `config/config.json` file to point to the correct MongoDB server location and configure the number of forks it is allowed to create._
+
+The `config/config.json` file controls various properties of the backend services.  These are described below:
+
+* `mongourl`: The URL of the MongoDB server.
+* `postProcessingSleepTimer`: The number of milliseconds to sleep after finishing a processing scan before it queries the database again for more unprocessed images.
+* `maxPostProcessingForks`: This should be set to the number of available cores to maximize the throughput of processing images through Kittydar.
+
+If you modify any of these values, be sure to restart the services after:
+
+```bash
+sudo systemctl restart mongodb-kittydar
+```
 
 # Install Frontend Service
 
