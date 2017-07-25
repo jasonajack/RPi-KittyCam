@@ -1,0 +1,10 @@
+[Unit]
+Description=KittyCam React.js frontend service
+Requires=kittycam-express.service
+
+[Service]
+WorkingDirectory=/usr/local/KittyCam/kittycam-frontend-react
+ExecStart=/usr/bin/npm start
+
+[Install]
+WantedBy=multi-user.target

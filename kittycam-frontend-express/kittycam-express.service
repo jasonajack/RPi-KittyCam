@@ -1,0 +1,13 @@
+[Unit]
+Description=Runs backend Express service that fetches MongoDB data for the ReactJS frontend service
+After=network.target
+BindTo=kittycam-react.service
+
+[Service]
+User=root
+EnvironmentFile=/usr/local/KittyCam/kittycam-frontend-express/systemd.conf
+WorkingDirectory=/usr/local/KittyCam/kittycam-frontend-express
+ExecStart=/usr/bin/node bin/www
+
+[Install]
+WantedBy=multi-user.target
