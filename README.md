@@ -165,7 +165,7 @@ Follow the steps below to install another server (i.e. desktop server) with Mong
 
 1. Edit the `mongodb/kittycam-cleanup.sh` script and adjust the `TOO_OLD` value to your liking, which configures how long to store image data in the database before it gets deleted. (_NOTE: Default is 30 hours._)
 
-1. Run the installer script, which installs and configures MongoDB optimally, and installs a background process which deletes old data that's over 7 days old.
+1. Run the installer script, which installs and configures MongoDB optimally, and installs a background process which deletes old data (configurable in `mongodb/kittycam-cleanup.sh`).
 
     ```bash
     ./install-backend-mongodb.sh
